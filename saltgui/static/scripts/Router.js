@@ -116,6 +116,11 @@ export class Router {
     this._registerMenuItem("events", "eventsview");
     this._registerMenuItem("reactors", "reactors");
     this._registerMenuItem("logout", "logout");
+
+    document.querySelector("#button-cmd").
+      addEventListener("click", () => {
+        this.goTo.replace("cmd");
+      });
   }
 
   _registerPage (pPage) {
