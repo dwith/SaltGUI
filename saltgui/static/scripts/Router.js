@@ -13,6 +13,8 @@ import {JobsPage} from "./pages/Jobs.js";
 import {KeysPage} from "./pages/Keys.js";
 import {LoginPage} from "./pages/Login.js";
 import {LogoutPage} from "./pages/Logout.js";
+import {MineMinionPage} from "./pages/MineMinion.js";
+import {MinePage} from "./pages/Mine.js";
 import {MinionsPage} from "./pages/Minions.js";
 import {OptionsPage} from "./pages/Options.js";
 import {PillarsMinionPage} from "./pages/PillarsMinion.js";
@@ -39,6 +41,8 @@ export class Router {
     this._registerPage(this.keysPage = new KeysPage(this));
     this._registerPage(this.grainsPage = new GrainsPage(this));
     this._registerPage(this.grainsMinionPage = new GrainsMinionPage(this));
+    this._registerPage(new MinePage(this));
+    this._registerPage(new MineMinionPage(this));
     this._registerPage(this.schedulesPage = new SchedulesPage(this));
     this._registerPage(this.schedulesMinionPage = new SchedulesMinionPage(this));
     this._registerPage(this.pillarsPage = new PillarsPage(this));
@@ -110,6 +114,7 @@ export class Router {
     this._registerMenuItem("schedules", "schedules");
     this._registerMenuItem("pillars", "pillars");
     this._registerMenuItem("beacons", "beacons");
+    this._registerMenuItem("mine", "/mine");
     this._registerMenuItem("keys", "keys");
     this._registerMenuItem("jobs", "jobs");
     this._registerMenuItem("templates", "templates");
@@ -227,7 +232,8 @@ export class Router {
       if (elem1.id === "button-pillars1" ||
          elem1.id === "button-schedules1" ||
          elem1.id === "button-grains1" ||
-         elem1.id === "button-beacons1") {
+         elem1.id === "button-beacons1" ||
+         elem1.id === "button-mine1") {
         const minionMenuItem = document.getElementById("button-minions1");
         minionMenuItem.classList.add("menu-item-active");
       }
