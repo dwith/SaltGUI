@@ -15,6 +15,7 @@ import {LoginPage} from "./pages/Login.js";
 import {LogoutPage} from "./pages/Logout.js";
 import {MinionsPage} from "./pages/Minions.js";
 import {OptionsPage} from "./pages/Options.js";
+import {Page} from "./pages/Page.js";
 import {PillarsMinionPage} from "./pages/PillarsMinion.js";
 import {PillarsPage} from "./pages/Pillars.js";
 import {ReactorsPage} from "./pages/Reactors.js";
@@ -31,7 +32,6 @@ export class Router {
     this.api = new API();
     this.api.router = this;
     this.commandbox = new CommandBox(this, this.api);
-    this.currentPage = undefined;
     this.pages = [];
 
     this._registerPage(new LoginPage(this));
@@ -211,10 +211,6 @@ export class Router {
   }
 
   _showPage (pPage) {
-    pPage.clearPage();
-
-    pPage.pageElement.style.display = "";
-
     const activeMenuItems = Array.from(document.querySelectorAll(".menu-item-active"));
     activeMenuItems.forEach((menuItem) => {
       menuItem.classList.remove("menu-item-active");
@@ -248,30 +244,35 @@ export class Router {
       elem2.classList.add("menu-item-active");
     }
 
+    pPage.clearPage();
+
+    Router._hideShowPanels(pPage);
+
     pPage.onShow();
 
     // start the event-pipe (again)
     // it is either not started, or needs restarting
     API.getEvents(this);
-
-    if (this.currentPage && this.currentPage !== pPage) {
-      Router._hidePage(this.currentPage);
-    }
-    this.currentPage = pPage;
-
-    this.currentPage.pageElement.classList.add("current");
   }
 
-  static _hidePage (pPage) {
-    const page = pPage.pageElement;
-    page.classList.remove("current");
+  static _hideShowPanels (pCurrentPage) {
     // 500ms matches the timeout in main.css (.route)
     window.setTimeout(() => {
-      // Hide element after fade, so it does not expand the body
-      page.style.display = "none";
+      let firstSeen = false;
+      for (const panel of Page.panels) {
+        if (pCurrentPage.panels.includes(panel)) {
+          panel.div.style.display = "";
+          panel.div.classList.add("current");
+          if (!firstSeen) {
+            panel.div.style.marginLeft = "0";
+            firstSeen = true;
+          }
+          continue;
+        }
+        // Hide element after fade, so it does not expand the body
+        panel.div.style.display = "none";
+        panel.div.classList.remove("current");
+      }
     }, 500);
-    if (pPage.onHide) {
-      pPage.onHide();
-    }
   }
 }
